@@ -1,6 +1,8 @@
+import 'reflect-metadata';
 import Mali from 'mali';
 import { resolve } from 'path';
 import { createConnection } from 'typeorm';
+import { createUser } from './controller/user';
 
 const PROTO_PATH = resolve(__dirname, './proto/user.proto');
 
@@ -9,6 +11,8 @@ async function bootstrap() {
 
     await createConnection()
         .then(async () => {
+            app.use({ createUser });
+
             await app.start('127.0.0.1:9009');
         })
         .catch(error => console.error(error));
