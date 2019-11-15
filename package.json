@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.ts",
     "scripts": {
-        "start:dev": "nodemon --exec ts-node src/index.ts"
+        "start:dev": "nodemon --exec ts-node src/index.ts",
+        "start": "ts-node src/index.ts"
     },
     "repository": {
         "type": "git",
@@ -18,7 +19,7 @@
     },
     "homepage": "https://github.com/Joshgallagher/fyp-user-service-v3#readme",
     "devDependencies": {
-        "@types/node": "^12.12.7",
+        "@types/node": "^8.0.29",
         "@typescript-eslint/eslint-plugin": "^2.7.0",
         "@typescript-eslint/parser": "^2.7.0",
         "eslint": "^6.6.0",
@@ -26,12 +27,12 @@
         "eslint-plugin-prettier": "^3.1.1",
         "nodemon": "^1.19.4",
         "prettier": "^1.19.1",
-        "ts-node": "^8.5.0",
-        "typescript": "^3.7.2"
+        "ts-node": "3.3.0",
+        "typescript": "3.3.3333"
     },
     "dependencies": {
-        "pg": "^7.12.1",
-        "reflect-metadata": "^0.1.13",
-        "typeorm": "^0.2.20"
+        "pg": "^7.3.0",
+        "reflect-metadata": "^0.1.10",
+        "typeorm": "0.2.20"
     }
 }
