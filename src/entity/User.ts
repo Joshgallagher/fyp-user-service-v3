@@ -1,6 +1,7 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['email'])
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -8,7 +9,7 @@ export class User extends BaseEntity {
     @Column()
     name: string;
 
-    @Column({ unique: true })
+    @Column()
     email: string;
 
     @Column()
