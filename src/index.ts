@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import Mali from 'mali';
 import { resolve } from 'path';
 import { createConnection } from 'typeorm';
-import { createUser } from './controller/user';
+import { createUser } from './user/user.controller';
 
 const PROTO_PATH = resolve(__dirname, './proto/user.proto');
 
