@@ -1,6 +1,7 @@
 import caller from 'grpc-caller';
 import { resolve } from 'path';
 import { bootstrap } from '../../src';
+import { User } from '../../src/user/user.entity';
 
 let rpcCaller: any;
 const PROTO_PATH = resolve(__dirname, '../../src/proto/user.proto');
@@ -22,5 +23,9 @@ describe('A user can register', () => {
         expect(rpcResponse).toHaveProperty('id');
         expect(rpcResponse).toHaveProperty('name');
         expect(rpcResponse).toMatchObject({ name: 'test' });
+
+        const newUser = await User.find({ where: { email: 'test@test.com' } });
+
+        expect(newUser).toHaveLength(1);
     });
 });
