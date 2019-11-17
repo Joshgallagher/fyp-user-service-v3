@@ -4,7 +4,7 @@ package user;
 
 service UserService {
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
-    rpc CreateUser (CreateUserRequest) returns (User);
+    rpc RegisterUser (RegisterUserRequest) returns (User);
     rpc GetUser (GetUserRequest) returns (User);
 }
 
@@ -17,7 +17,7 @@ message GetUserRequest {
     string id = 1;
 }
 
-message CreateUserRequest {
+message RegisterUserRequest {
     string name = 1;
     string email = 2;
     string password = 3;
