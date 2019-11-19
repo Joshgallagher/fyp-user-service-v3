@@ -1,21 +1,21 @@
-import Mali from 'mali';
 import caller from 'grpc-caller';
 import { resolve } from 'path';
-import { bootstrap } from '../../src';
 import { User } from '../../src/user/user.entity';
+import { server } from '../../src/core/server.core';
+import { connection } from '../../src/core/connection.core';
 
 const PROTO_PATH = resolve(__dirname, '../../src/proto/user.proto');
 
-let server: Mali;
+let rpcServer: any;
 let rpcCaller: any;
 
 beforeEach(async () => {
-    server = await bootstrap();
-
+    await connection();
+    rpcServer = server();
     rpcCaller = await caller('127.0.0.1:50052', PROTO_PATH, 'UserService');
 });
 
-afterEach(async () => await server.close());
+afterEach(async () => await rpcServer.close());
 
 describe('A user can register', () => {
     test('Successful registration', async () => {
