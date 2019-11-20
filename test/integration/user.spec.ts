@@ -1,8 +1,7 @@
 import caller from 'grpc-caller';
 import { resolve } from 'path';
 import { User } from '../../src/user/user.entity';
-import { server } from '../../src/core/server.core';
-import { connection } from '../../src/core/connection.core';
+import { startServer } from '../../src/core/server.core';
 
 const PROTO_PATH = resolve(__dirname, '../../src/proto/user.proto');
 
@@ -10,8 +9,7 @@ let rpcServer: any;
 let rpcCaller: any;
 
 beforeEach(async () => {
-    await connection();
-    rpcServer = server();
+    rpcServer = await startServer();
     rpcCaller = await caller('127.0.0.1:50052', PROTO_PATH, 'UserService');
 });
 
@@ -19,9 +17,11 @@ afterEach(async () => await rpcServer.close());
 
 describe('A user can register', () => {
     test('Successful registration', async () => {
+        const email = 'test@test.com';
+
         const rpcResponse = await rpcCaller.registerUser({
             name: 'test',
-            email: 'test@test.com',
+            email,
             password: 'secret',
         });
 
@@ -29,7 +29,7 @@ describe('A user can register', () => {
         expect(rpcResponse).toHaveProperty('name');
         expect(rpcResponse).toMatchObject({ name: 'test' });
 
-        const newUser = await User.find({ where: { email: 'test@test.com' } });
+        const newUser = await User.find({ where: { email } });
 
         expect(newUser).toHaveLength(1);
     });
