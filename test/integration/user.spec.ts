@@ -1,21 +1,18 @@
-import caller from 'grpc-caller';
-import { resolve } from 'path';
-import { User } from '../../src/user/user.entity';
 import { startServer } from '../../src/core/server.core';
-
-const PROTO_PATH = resolve(__dirname, '../../src/proto/user.proto');
-
-let rpcServer: any;
-let rpcCaller: any;
-
-beforeEach(async () => {
-    rpcServer = await startServer();
-    rpcCaller = await caller('127.0.0.1:50052', PROTO_PATH, 'UserService');
-});
-
-afterEach(async () => await rpcServer.close());
+import { User } from '../../src/user/user.entity';
+import { rpcClient } from '../helper/rpc-client.helper';
 
 describe('A user can register', () => {
+    let rpcServer: any;
+    let rpcCaller: any;
+
+    beforeAll(async () => {
+        rpcServer = await startServer();
+        rpcCaller = await rpcClient();
+    });
+
+    afterAll(async () => await rpcServer.close());
+
     test('Successful registration', async () => {
         const email = 'test@test.com';
 
