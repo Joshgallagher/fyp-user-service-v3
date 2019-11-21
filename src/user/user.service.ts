@@ -32,6 +32,15 @@ export const register = async (data: Record<string, string>): Promise<User> => {
 export const authenticate = async (data: Record<string, string>): Promise<boolean> => {
     const { email, password } = data;
 
+    try {
+        await validateOrReject(User.create({ email, password }), { skipMissingProperties: true });
+    } catch ([{ property, constraints }]) {
+        throw new RpcException('VALIDATION_ERROR', status.FAILED_PRECONDITION, {
+            field: property,
+            error: constraints[Object.keys(constraints)[0]],
+        });
+    }
+
     const user: any = await getRepository(User).findOne({ where: { email } });
 
     if (!user || !(await compare(password, user.password))) {
