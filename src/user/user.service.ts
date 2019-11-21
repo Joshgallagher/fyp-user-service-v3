@@ -34,14 +34,10 @@ export const authenticate = async (data: Record<string, string>): Promise<boolea
 
     const user: any = await getRepository(User).findOne({ where: { email } });
 
-    if (!user) {
-        return false;
-    }
-
-    const match: boolean = await compare(password, user.password);
-
-    if (!match) {
-        return false;
+    if (!user || !(await compare(password, user.password))) {
+        throw new RpcException('UNAUTHENTICATED_ERROR', status.UNAUTHENTICATED, {
+            error: 'The provided email or password are incorrect',
+        });
     }
 
     return true;
