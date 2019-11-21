@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import RpcException from 'grpc-error';
 import { status } from 'grpc';
 import { User } from './user.entity';
+import { compare } from 'bcrypt';
 
 export const register = async (data: Record<string, string>): Promise<User> => {
     const { name, email, password } = data;
@@ -31,7 +32,17 @@ export const register = async (data: Record<string, string>): Promise<User> => {
 export const authenticate = async (data: Record<string, string>): Promise<boolean> => {
     const { email, password } = data;
 
-    // auth user
+    const user: any = await getRepository(User).findOne({ where: { email } });
+
+    if (!user) {
+        return false;
+    }
+
+    const match: boolean = await compare(password, user.password);
+
+    if (!match) {
+        return false;
+    }
 
     return true;
 };
