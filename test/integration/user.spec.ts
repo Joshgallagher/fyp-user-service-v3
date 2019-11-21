@@ -86,7 +86,7 @@ describe('A user can register', () => {
             expect(details).toEqual('VALIDATION_ERROR');
 
             expect(responseMetadata.get('field')).toContain('name');
-            expect(responseMetadata.get('error')).toContain('name must be longer than or equal to 1 characters');
+            expect(responseMetadata.get('error')).toContain('name should not be empty');
         }
     });
 
