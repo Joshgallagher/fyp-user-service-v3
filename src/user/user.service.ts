@@ -27,3 +27,11 @@ export const register = async (data: Record<string, string>): Promise<User> => {
 
     return await newUser.save();
 };
+
+export const authenticate = async (data: Record<string, string>): Promise<boolean> => {
+    const { email, password } = data;
+
+    // auth user
+
+    return true;
+};
