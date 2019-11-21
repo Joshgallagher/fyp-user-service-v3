@@ -63,4 +63,82 @@ describe('A user can register', () => {
             expect(responseMetadata.get('error')).toContain('Email is already in use');
         }
     });
+
+    test('Unsuccessful registration due to name not being provided', async () => {
+        expect.assertions(4);
+
+        const user = {
+            name: '',
+            email: faker.internet.email(),
+            password: faker.internet.password(8),
+        };
+
+        try {
+            await new rpcCaller.Request('registerUser', user)
+                .withResponseMetadata(true)
+                .withResponseStatus(true)
+                .exec();
+        } catch ({ code, details, metadata }) {
+            const responseMetadata = metadata as Metadata;
+
+            expect(code).toEqual(rpcStatus.FAILED_PRECONDITION);
+
+            expect(details).toEqual('VALIDATION_ERROR');
+
+            expect(responseMetadata.get('field')).toContain('name');
+            expect(responseMetadata.get('error')).toContain('name must be longer than or equal to 1 characters');
+        }
+    });
+
+    test('Unsuccessful registration due to malformed email', async () => {
+        expect.assertions(4);
+
+        const user = {
+            name: faker.name.firstName(),
+            email: 'malformed@gmailcom',
+            password: faker.internet.password(8),
+        };
+
+        try {
+            await new rpcCaller.Request('registerUser', user)
+                .withResponseMetadata(true)
+                .withResponseStatus(true)
+                .exec();
+        } catch ({ code, details, metadata }) {
+            const responseMetadata = metadata as Metadata;
+
+            expect(code).toEqual(rpcStatus.FAILED_PRECONDITION);
+
+            expect(details).toEqual('VALIDATION_ERROR');
+
+            expect(responseMetadata.get('field')).toContain('email');
+            expect(responseMetadata.get('error')).toContain('email must be an email');
+        }
+    });
+
+    test('Unsuccessful registration due to password being less than 6 characters', async () => {
+        expect.assertions(4);
+
+        const user = {
+            name: faker.name.firstName(),
+            email: faker.internet.email(),
+            password: '',
+        };
+
+        try {
+            await new rpcCaller.Request('registerUser', user)
+                .withResponseMetadata(true)
+                .withResponseStatus(true)
+                .exec();
+        } catch ({ code, details, metadata }) {
+            const responseMetadata = metadata as Metadata;
+
+            expect(code).toEqual(rpcStatus.FAILED_PRECONDITION);
+
+            expect(details).toEqual('VALIDATION_ERROR');
+
+            expect(responseMetadata.get('field')).toContain('password');
+            expect(responseMetadata.get('error')).toContain('password must be longer than or equal to 6 characters');
+        }
+    });
 });
