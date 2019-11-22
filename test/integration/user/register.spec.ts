@@ -1,10 +1,10 @@
-import { startServer } from '../../src/core/server.core';
-import { User } from '../../src/user/user.entity';
-import { rpcClient } from '../helper/rpc-client.helper';
+import { startServer } from '../../../src/core/server.core';
+import { User } from '../../../src/user/user.entity';
+import { rpcClient } from '../../helper/rpc-client.helper';
 import { status as rpcStatus, Metadata } from 'grpc';
 import faker from 'faker';
 
-describe('A user can register', () => {
+describe('A user can register with a name, email and password', () => {
     let rpcServer: any;
     let rpcCaller: any;
 
