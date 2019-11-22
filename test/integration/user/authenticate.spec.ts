@@ -9,7 +9,7 @@ describe('A user can authenticate with their email and password', () => {
 
     beforeAll(async () => {
         rpcServer = await startServer();
-        rpcCaller = await rpcClient();
+        rpcCaller = await rpcClient('127.0.0.1', rpcServer.ports[0]);
     });
 
     afterEach(async () => await User.clear());
