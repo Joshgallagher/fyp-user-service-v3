@@ -9,8 +9,8 @@ describe('A user can register with a name, email and password', () => {
     let rpcCaller: any;
 
     beforeAll(async () => {
-        rpcServer = await startServer();
-        rpcCaller = await rpcClient('127.0.0.1', rpcServer.ports[0]);
+        rpcServer = await startServer(true);
+        rpcCaller = await rpcClient(rpcServer.ports[0]);
     });
 
     afterEach(async () => await User.clear());
