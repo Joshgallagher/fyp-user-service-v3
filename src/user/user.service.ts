@@ -52,8 +52,16 @@ export const authenticate = async (data: Record<string, string>): Promise<boolea
     return true;
 };
 
-export const get = async (data: Record<string, string>): Promise<Record<string, string>> => {
-    console.log(data);
+export const get = async (data: Record<string, string>): Promise<User> => {
+    const { id } = data;
 
-    return { id: '1', name: 'josh' };
+    const user: any = await getRepository(User).findOne({ where: { id } });
+
+    if (!user) {
+        throw new RpcException('NOT_FOUND_ERROR', status.NOT_FOUND, {
+            error: 'No user found matching ID',
+        });
+    }
+
+    return user;
 };
