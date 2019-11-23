@@ -41,9 +41,11 @@
     "dependencies": {
         "@grpc/proto-loader": "^0.5.3",
         "@types/bcrypt": "^3.0.0",
+        "@types/dotenv": "^8.2.0",
         "@types/grpc-error": "^1.0.0",
         "bcrypt": "^3.0.6",
         "class-validator": "^0.11.0",
+        "dotenv": "^8.2.0",
         "grpc": "^1.24.2",
         "grpc-caller": "^0.13.0",
         "grpc-error": "^1.0.0",
