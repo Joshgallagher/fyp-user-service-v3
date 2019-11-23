@@ -1,7 +1,7 @@
 import './config.core';
 import Mali from 'mali';
 import { resolve } from 'path';
-import { registerUser, authenticateUser } from '../user/user.controller';
+import { registerUser, authenticateUser, getUser } from '../user/user.controller';
 import { createConnection } from './connection.core';
 
 const PROTO_PATH = resolve(__dirname, '../proto/user.proto');
@@ -12,7 +12,7 @@ export const startServer = async (randomPort = false): Promise<Mali> => {
 
     const app = new Mali(PROTO_PATH, PROTO_SERVICE);
 
-    app.use({ registerUser, authenticateUser });
+    app.use({ registerUser, authenticateUser, getUser });
 
     if (randomPort) {
         app.start(`${process.env.HOST}:0`);

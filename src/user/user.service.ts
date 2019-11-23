@@ -51,3 +51,9 @@ export const authenticate = async (data: Record<string, string>): Promise<boolea
 
     return true;
 };
+
+export const get = async (data: Record<string, string>): Promise<Record<string, string>> => {
+    console.log(data);
+
+    return { id: '1', name: 'josh' };
+};
