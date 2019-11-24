@@ -3,8 +3,8 @@ syntax = "proto3";
 package user;
 
 service UserService {
+    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
-    rpc RegisterUser (RegisterUserRequest) returns (User);
     rpc GetUser (GetUserRequest) returns (User);
 }
 
@@ -21,6 +21,10 @@ message RegisterUserRequest {
     string name = 1;
     string email = 2;
     string password = 3;
+}
+
+message RegisterUserResponse {
+    bool registered = 1;
 }
 
 message AuthenticateUserRequest {
