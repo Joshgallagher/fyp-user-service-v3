@@ -55,11 +55,20 @@ export const authenticate = async (data: Record<string, string>): Promise<boolea
 export const get = async (data: Record<string, string>): Promise<User> => {
     const { id } = data;
 
-    const user: any = await getRepository(User).findOne({ where: { id } });
+    try {
+        await validateOrReject(User.create({ id }), { skipMissingProperties: true });
+    } catch ([{ property, constraints }]) {
+        throw new RpcException('VALIDATION_ERROR', status.FAILED_PRECONDITION, {
+            field: property,
+            error: constraints[Object.keys(constraints)[0]],
+        });
+    }
+
+    const user: any = await getRepository(User).findOne(id);
 
     if (!user) {
         throw new RpcException('NOT_FOUND_ERROR', status.NOT_FOUND, {
-            error: 'No user found matching ID',
+            error: 'User not found',
         });
     }
 

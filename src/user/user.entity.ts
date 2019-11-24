@@ -1,10 +1,12 @@
 import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { Length, IsEmail, IsNotEmpty } from 'class-validator';
+import { Length, IsEmail, IsNotEmpty, IsUUID } from 'class-validator';
 
 @Entity()
 @Unique(['email'])
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
+    @IsNotEmpty()
+    @IsUUID()
     id: string;
 
     @Column()
