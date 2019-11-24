@@ -4,7 +4,7 @@ import { status } from 'grpc';
 import { User } from './user.entity';
 import { compare } from 'bcrypt';
 
-export const register = async (data: Record<string, string>): Promise<User> => {
+export const register = async (data: Record<string, string>): Promise<boolean> => {
     const { name, email, password } = data;
 
     if (!!(await getRepository(User).findOne({ where: { email } }))) {
@@ -14,7 +14,15 @@ export const register = async (data: Record<string, string>): Promise<User> => {
         });
     }
 
-    return await User.create({ name, email, password }).save();
+    try {
+        await User.create({ name, email, password }).save();
+    } catch (e) {
+        throw new RpcException('INTERNAL_ERROR', status.INTERNAL, {
+            error: 'Something went wrong when attempting to save the user',
+        });
+    }
+
+    return true;
 };
 
 export const authenticate = async (data: Record<string, string>): Promise<boolean> => {
