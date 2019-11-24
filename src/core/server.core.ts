@@ -3,6 +3,7 @@ import Mali from 'mali';
 import { resolve } from 'path';
 import { registerUser, authenticateUser, getUser } from '../user/user.controller';
 import { createConnection } from './connection.core';
+import { validateMiddleware } from '../middleware/validate.middleware';
 
 const PROTO_PATH = resolve(__dirname, '../proto/user.proto');
 const PROTO_SERVICE = 'UserService';
@@ -12,6 +13,7 @@ export const startServer = async (randomPort = false): Promise<Mali> => {
 
     const app = new Mali(PROTO_PATH, PROTO_SERVICE);
 
+    app.use(validateMiddleware());
     app.use({ registerUser, authenticateUser, getUser });
 
     if (randomPort) {
