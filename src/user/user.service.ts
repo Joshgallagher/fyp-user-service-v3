@@ -18,7 +18,7 @@ export const register = async (data: Record<string, string>): Promise<User> => {
     const newUser = User.create({ name, email, password });
 
     try {
-        await validateOrReject(newUser);
+        await validateOrReject(newUser, { skipMissingProperties: true });
     } catch ([{ property, constraints }]) {
         throw new RpcException('VALIDATION_ERROR', status.FAILED_PRECONDITION, {
             field: property,
