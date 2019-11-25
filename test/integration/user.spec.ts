@@ -18,7 +18,7 @@ describe('A user can be registered, authenticated and thier details can be retri
 
     describe('A user can register with a name, email and password', () => {
         test('Successful registration', async () => {
-            expect.assertions(4);
+            expect.assertions(3);
 
             const user = {
                 name: faker.name.firstName(),
@@ -28,9 +28,8 @@ describe('A user can be registered, authenticated and thier details can be retri
 
             const rpcResponse = await rpcCaller.registerUser(user);
 
-            expect(rpcResponse).toHaveProperty('id');
-            expect(rpcResponse).toHaveProperty('name');
-            expect(rpcResponse).toMatchObject({ name: user.name });
+            expect(rpcResponse).toHaveProperty('registered');
+            expect(rpcResponse).toMatchObject({ registered: true });
 
             const newUser = await User.find({ where: { email: user.email } });
 
