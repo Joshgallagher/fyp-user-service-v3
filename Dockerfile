@@ -1,5 +1,5 @@
 # Base build
-FROM node:10 as base
+FROM node:10.16.0-alpine as base
 
 ENV NODE_ENV=production
 
