@@ -19,7 +19,7 @@ RUN npm install --only=development
 
 CMD [ "npm", "run", "start:dev" ]
 
-# Transpile TypeScript to JavaScript
+# Transpile TypeScript to JavaScript for production build
 FROM dev as build
 
 COPY . .
