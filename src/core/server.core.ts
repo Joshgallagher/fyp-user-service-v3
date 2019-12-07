@@ -8,19 +8,29 @@ import { validateMiddleware } from '../middleware/validate.middleware';
 const PROTO_PATH = resolve(__dirname, '../proto/user.proto');
 const PROTO_SERVICE = 'UserService';
 
+let appInstance: Mali;
+
 export const startServer = async (randomPort = false): Promise<Mali> => {
     await createConnection();
 
-    const app = new Mali(PROTO_PATH, PROTO_SERVICE);
+    appInstance = new Mali(PROTO_PATH, PROTO_SERVICE);
 
-    app.use(validateMiddleware());
-    app.use({ registerUser, authenticateUser, getUser });
+    appInstance.use(validateMiddleware());
+    appInstance.use({ registerUser, authenticateUser, getUser });
 
     if (randomPort) {
-        app.start(`${process.env.HOST}:0`);
-    } else {
-        app.start(`${process.env.HOST}:${process.env.PORT}`);
+        appInstance.start(`${process.env.HOST}:0`);
+
+        return appInstance;
     }
 
-    return app;
+    appInstance.start(`${process.env.HOST}:${process.env.PORT}`);
+
+    return appInstance;
+};
+
+export const shutdownServer = async (): Promise<void> => {
+    await appInstance.close();
+
+    process.exit();
 };
