@@ -6,7 +6,7 @@ import { get } from 'request-promise-native';
 export const verifyJwtMiddleware = (): Function => {
     return bearer(
         async (token: string, _context: Context, next: any): Promise<void> => {
-            const body = await get('http://oathkeeper-api:4456/.well-known/jwks.json');
+            const body = await get(`${process.env.OATHKEEPER_API_URL}/.well-known/jwks.json`);
 
             const ks = JWKS.asKeyStore(JSON.parse(body));
 
