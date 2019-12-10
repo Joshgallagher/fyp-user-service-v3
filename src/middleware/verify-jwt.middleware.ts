@@ -13,24 +13,23 @@ export const verifyJwtMiddleware = (): Function => {
             try {
                 jwks = await get(`${process.env.OATHKEEPER_API_URL}/.well-known/jwks.json`);
             } catch (e) {
-                throw new RpcException('INTERNAL_ERROR', status.INTERNAL, {
-                    error: 'Something went wrong when requesting the JWKS from Oathkeeper API',
+                throw new RpcException('JWKS_REQUEST_ERROR', status.DEADLINE_EXCEEDED, {
+                    error: 'Oathkeeper API JWKS unavailable',
                 });
             }
 
             try {
-                const ks = JWKS.asKeyStore(JSON.parse(jwks));
-                JWT.verify(token, ks, {});
+                JWT.verify(token, JWKS.asKeyStore(JSON.parse(jwks)), {});
             } catch (e) {
+                const error = e as any;
                 const code = e.code.substring(4);
-                const clientError =
-                    (e as any) instanceof
-                    (errors.JWTMalformed ||
-                        errors.JWTClaimInvalid ||
-                        errors.JWSVerificationFailed ||
-                        errors.JWSInvalid);
 
-                if (clientError) {
+                if (
+                    error instanceof errors.JWTClaimInvalid ||
+                    error instanceof errors.JWTMalformed ||
+                    error instanceof errors.JWSVerificationFailed ||
+                    error instanceof errors.JWSInvalid
+                ) {
                     throw new RpcException(code, status.FAILED_PRECONDITION, {
                         error: e.message,
                     });
