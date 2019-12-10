@@ -8,10 +8,14 @@ import { status } from 'grpc';
 export const verifyJwtMiddleware = (): Function => {
     return bearer(
         async (token: string, _context: Context, next: any): Promise<void> => {
+            if (process.env.NODE_ENV === 'test') {
+                await next();
+            }
+
             let jwks: any;
 
             try {
-                jwks = await get(`${process.env.OATHKEEPER_API_URL}/.well-known/jwks.json`);
+                jwks = await get(`${process.env.JWKS_URL}/.well-known/jwks.json`);
             } catch (e) {
                 throw new RpcException('JWKS_REQUEST_ERROR', status.DEADLINE_EXCEEDED, {
                     error: 'Oathkeeper API JWKS unavailable',
