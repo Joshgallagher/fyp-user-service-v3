@@ -8,7 +8,7 @@ import { status } from 'grpc';
 export const verifyJwtMiddleware = (): Function => {
     return bearer(
         async (token: string, _context: Context, next: any): Promise<void> => {
-            if (process.env.NODE_ENV === 'test') {
+            if (process.env.SKIP_JWT_VERIFICATION) {
                 await next();
             }
 
