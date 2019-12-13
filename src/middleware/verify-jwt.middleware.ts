@@ -9,7 +9,7 @@ export const verifyJwtMiddleware = (): Function => {
     return bearer(
         async (token: string, _context: Context, next: any): Promise<void> => {
             if (process.env.SKIP_JWT_VERIFICATION) {
-                await next();
+                return await next();
             }
 
             let jwks: any;
@@ -17,13 +17,18 @@ export const verifyJwtMiddleware = (): Function => {
             try {
                 jwks = await get(`${process.env.JWKS_URL}/.well-known/jwks.json`);
             } catch (e) {
-                throw new RpcException('JWKS_REQUEST_ERROR', status.DEADLINE_EXCEEDED, {
+                throw new RpcException('JWKS_ERROR', status.DEADLINE_EXCEEDED, {
                     error: 'Oathkeeper API JWKS unavailable',
                 });
             }
 
             try {
-                JWT.verify(token, JWKS.asKeyStore(JSON.parse(jwks)), {});
+                const keyStore = JWKS.asKeyStore(JSON.parse(jwks));
+
+                JWT.verify(token, keyStore, {
+                    profile: 'id_token',
+                    issuer: 'http://localhost:4456',
+                });
             } catch (e) {
                 const error = e as any;
                 const code = e.code.substring(4);
