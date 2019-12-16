@@ -8,14 +8,16 @@ import { status } from 'grpc';
 export const verifyJwtMiddleware = (): Function => {
     return bearer(
         async (token: string, _context: Context, next: any): Promise<void> => {
-            if (process.env.SKIP_JWT_VERIFICATION) {
+            if (process.env.SKIP_JWT_VERIFICATION === 'true') {
                 return await next();
             }
 
             let jwks: any;
 
             try {
-                jwks = await get(`${process.env.JWKS_URL}/.well-known/jwks.json`);
+                jwks = await get(`${process.env.JWKS_URL}/.well-known/jwks.json`, {
+                    headers: { 'Content-Type': 'Application/json' },
+                });
             } catch (e) {
                 throw new RpcException('JWKS_ERROR', status.DEADLINE_EXCEEDED, {
                     error: 'Oathkeeper API JWKS unavailable',
@@ -27,7 +29,8 @@ export const verifyJwtMiddleware = (): Function => {
 
                 JWT.verify(token, keyStore, {
                     profile: 'id_token',
-                    issuer: 'http://localhost:4456',
+                    audience: (process.env.JWT_AUDIENCE as string).split(','),
+                    issuer: process.env.JWT_ISSUER,
                 });
             } catch (e) {
                 const error = e as any;
