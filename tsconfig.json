@@ -33,6 +33,6 @@
     "include": [
         "./src/**/*.ts",
         "./test/**/*.ts",
-        "./@types/*.d.ts"
+        "./@types/*/*.d.ts"
     ]
 }
