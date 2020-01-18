@@ -5,13 +5,16 @@ import { get } from 'request-promise-native';
 import RpcException from 'grpc-error';
 import { status } from 'grpc';
 
-export const verifyJwtMiddleware = (): Function => {
-    return bearer(
-        async (token: string, _context: Context, next: any): Promise<void> => {
-            if (process.env.SKIP_JWT_VERIFICATION === 'true') {
-                return await next();
-            }
+const MIDDLEWARE_OPTIONS = { error: { message: 'NOT_AUTHORISED', code: status.PERMISSION_DENIED } };
 
+export const verifyJwtMiddleware = (): Function => {
+    if (process.env.SKIP_JWT_VERIFICATION === 'true') {
+        return async (next: any) => await next();
+    }
+
+    return bearer(
+        MIDDLEWARE_OPTIONS,
+        async (token: string, _context: Context, next: any): Promise<void> => {
             let jwks: any;
 
             try {
