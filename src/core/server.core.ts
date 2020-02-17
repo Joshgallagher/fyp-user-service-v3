@@ -16,9 +16,14 @@ export const startServer = async (randomPort = false): Promise<Mali> => {
 
     appInstance = new Mali(PROTO_PATH, PROTO_SERVICE);
 
-    appInstance.use(verifyJwtMiddleware());
     appInstance.use(validateMiddleware());
-    appInstance.use({ registerUser, authenticateUser, getUser });
+    appInstance.use({
+        UserService: {
+            registerUser: [registerUser],
+            authenticateUser: [authenticateUser],
+            getUser: [getUser, verifyJwtMiddleware],
+        },
+    });
 
     if (randomPort) {
         appInstance.start(`${process.env.HOST}:0`);
