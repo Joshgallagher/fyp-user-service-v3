@@ -25,7 +25,7 @@ export const register = async (data: Record<string, string>): Promise<boolean> =
     return true;
 };
 
-export const authenticate = async (data: Record<string, string>): Promise<boolean> => {
+export const authenticate = async (data: Record<string, string>): Promise<User> => {
     const { email, password } = data;
 
     const user: any = await getRepository(User).findOne({ where: { email } });
@@ -36,7 +36,7 @@ export const authenticate = async (data: Record<string, string>): Promise<boolea
         });
     }
 
-    return true;
+    return user;
 };
 
 export const get = async (data: Record<string, string>): Promise<User> => {

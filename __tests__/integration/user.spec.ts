@@ -147,7 +147,7 @@ describe('A user can be registered, authenticated and thier details can be retri
 
     describe('A user can authenticate with their email and password', () => {
         test('Successful authentication', async () => {
-            expect.assertions(2);
+            expect.assertions(4);
 
             const user = {
                 name: faker.name.firstName(),
@@ -162,8 +162,12 @@ describe('A user can be registered, authenticated and thier details can be retri
                 password: user.password,
             });
 
-            expect(rpcResponse).toHaveProperty('authenticated');
-            expect(rpcResponse).toMatchObject({ authenticated: true });
+            const authenticateUser = await User.find({ where: { email: user.email } });
+
+            expect(rpcResponse).toHaveProperty('id');
+            expect(rpcResponse).toHaveProperty('name');
+            expect(rpcResponse).toMatchObject({ id: authenticateUser[0].id });
+            expect(rpcResponse).toMatchObject({ name: user.name });
         });
 
         test('Unsuccessful authentication due to email not being provided', async () => {

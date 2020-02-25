@@ -8,9 +8,9 @@ export const registerUser = async (context: Context): Promise<void> => {
 };
 
 export const authenticateUser = async (context: Context): Promise<void> => {
-    const authenticated = await authenticate(context.request.req);
+    const { id, name } = await authenticate(context.request.req);
 
-    context.res = { authenticated };
+    context.res = { id, name };
 };
 
 export const getUser = async (context: Context): Promise<void> => {
