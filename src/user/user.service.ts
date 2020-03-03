@@ -52,3 +52,9 @@ export const get = async (data: Record<string, string>): Promise<User> => {
 
     return user;
 };
+
+export const getByIds = async (ids: string[]): Promise<User[]> => {
+    const user: User[] = await getRepository(User).findByIds(ids);
+
+    return user;
+};
