@@ -312,35 +312,5 @@ describe('A user can be registered, authenticated and thier details can be retri
             expect(rpcResponse).toMatchObject({ id });
             expect(rpcResponse).toMatchObject({ name });
         });
-
-        test('User can not be found due to a malformed ID (UUID)', async () => {
-            expect.assertions(4);
-
-            await User.create({
-                name: faker.name.firstName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(8),
-            }).save();
-
-            const malformedUuid = 'd9e56f60-74e8-4f9b--3a55545f2332';
-
-            try {
-                await new rpcCaller.Request('getUser', {
-                    id: malformedUuid,
-                })
-                    .withResponseMetadata(true)
-                    .withResponseStatus(true)
-                    .exec();
-            } catch ({ code, details, metadata }) {
-                const responseMetadata = metadata as Metadata;
-
-                expect(code).toEqual(rpcStatus.FAILED_PRECONDITION);
-
-                expect(details).toEqual('VALIDATION_ERROR');
-
-                expect(responseMetadata.get('field')).toContain('id');
-                expect(responseMetadata.get('error')).toContain('id must be an UUID');
-            }
-        });
     });
 });
